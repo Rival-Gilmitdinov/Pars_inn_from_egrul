@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block home %}Главная страница{% endblock %}
+
+{%block body%}
+<h1>Главная страница для загрузки файла</h1>
+{% with messages = get_flashed_messages(with_categories = true) %}
+    {% if messages %}
+        {%for category, message in messages %}
+            <div class = "alert alert-{{category}}" id="flashMessage">
+                {{message}}
+                <button onclick="document.getElementById('flashMessage').remove()">×</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% if upload_success %}
+<div id="successMessage" style="
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    color: #3c763d;
+    background-color: #dff0d8;
+    border: 1px solid #d6e9c6;
+">
+    Файл успешно загружен!
+    <button onclick="this.parentElement.remove()" style="
+        float: right;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    ">×</button>
+</div>
+{% endif %}
+<form method="post" action="/" enctype="multipart/form-data">
+    <label> Загрузите файл эксель с данными инн<br><br><input type="file" name="file"></label><br><br>
+        <button type="submit">Загрузить</button>
+</form>
+
+
+{%endblock%}
