@@ -70,4 +70,4 @@ class Parser_pdf():
         return new_value
 
 pars = Parser_pdf()
-print(pars.find_value())
+data_value = pars.find_value()

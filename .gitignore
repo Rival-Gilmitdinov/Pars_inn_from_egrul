@@ -7,4 +7,9 @@ venv/
 __pycache__/Work_excel.cpython-310.pyc
 __pycache__/config.cpython-310.pyc
 __pycache__/qwe.cpython-310.pyc
+__pycache__/
+saving_pdf/
+uploads/
+result_data.xlsx
+
 

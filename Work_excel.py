@@ -1,11 +1,10 @@
+import openpyxl
 from openpyxl import load_workbook
 import glob
 import os
 import os
-import requests
-from qwe import cookies, headers
-import time
-import pdfplumber
+from Parser_pdf import data_value
+
 
 
 class Work_excel():
@@ -47,6 +46,26 @@ print(sp[1])
 print(sp[2])
 
 
+class Write_data():
+    def write_in_excel(self, spisok):
+        book = openpyxl.Workbook()
+        sheet = book.active
+        sheet['A1'] = 'Полное наименование на русском языке'
+        sheet['B1'] = 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'
+        sheet['C1'] = 'Сведения об основном виде деятельности'
+        n = 1
+        for value in spisok:
+            sheet[n][0].value = value['Полное наименование на русском языке']
+            sheet[n][1].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']
+            sheet[n][2].value = value['Сведения об основном виде деятельности']
+            n += 1
+        book.save('result_data.xlsx')
+        book.close()
+
+
+move = Write_data()
+
+move.write_in_excel(data_value)
 
 
 
