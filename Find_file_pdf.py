@@ -52,4 +52,4 @@ class Find_pdf_file():
 
 
 pdf_files = Find_pdf_file()
-pdf_files.query(sp[0])
+# pdf_files.query(sp[0])

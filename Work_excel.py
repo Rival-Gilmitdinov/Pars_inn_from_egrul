@@ -47,25 +47,37 @@ print(sp[2])
 
 
 class Write_data():
-    def write_in_excel(self, spisok):
+    def write_in_excel(self, spisok, inn, error_type, error_data):
         book = openpyxl.Workbook()
         sheet = book.active
-        sheet['A1'] = 'Полное наименование на русском языке'
-        sheet['B1'] = 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'
-        sheet['C1'] = 'Сведения об основном виде деятельности'
+        sheet['A1'] = 'ИНН'
+        sheet['B1'] = 'Полное наименование на русском языке'
+        sheet['C1'] = 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'
+        sheet['D1'] = 'Сведения об основном виде деятельности'
         n = 1
         for value in spisok:
-            sheet[n][0].value = value['Полное наименование на русском языке']
-            sheet[n][1].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']
-            sheet[n][2].value = value['Сведения об основном виде деятельности']
+            sheet[n][0].value = inn[n - 1]
+            sheet[n][1].value = value['Полное наименование на русском языке']
+            sheet[n][2].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']
+            sheet[n][3].value = value['Сведения об основном виде деятельности']
             n += 1
+        if error_type:
+            for key_error_type, value_error_type in error_type.items():
+                sheet[n][0].value = key_error_type
+                sheet[n][1].value = value_error_type
+                n += 1
+        if error_data:
+            for key_error_data, value_error_data in error_data.items():
+                sheet[n][0].value = key_error_data
+                sheet[n][1].value = value_error_data
+                n += 1
         book.save('result_data.xlsx')
         book.close()
 
 
 move = Write_data()
 
-move.write_in_excel(data_value)
+# move.write_in_excel(data_value, sp[0], sp[1], sp[2])
 
 
 
