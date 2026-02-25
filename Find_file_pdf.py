@@ -12,6 +12,8 @@ class Find_pdf_file():
         session = requests.Session()
         # Проходим циклом по списку из значений инн
         for value in table:
+            if self.chek(value) == True:
+                continue
             json = {'vyp3CaptchaToken': '',
                         'page': '',
                         'query': f'{value}',
@@ -49,6 +51,15 @@ class Find_pdf_file():
         file_path = os.path.join('saving_pdf', f'{inn}_result_search_file.pdf')
         with open(file_path, mode='wb') as file_pdf:
             file_pdf.write(file.content)
+
+    def chek(self, znachenie):
+        """Функция по проверке, есть ли уже пдф файл с значением инн,которое нужно спарсить"""
+        flag = False
+        dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
+        for file in os.listdir(dir):
+            if str(znachenie) in file:
+                flag = True
+        return flag
 
 
 pdf_files = Find_pdf_file()

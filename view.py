@@ -54,16 +54,6 @@ def start():
 
 
 
-# @app.route('/data_inn', methods=['GET', 'POST'])
-# def
-
-
-
-# @app.route('/result', methods=['POST', 'GET'])
-# def message_result():
-#     return render_template('result.html')
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -3,7 +3,7 @@ from openpyxl import load_workbook
 import glob
 import os
 import os
-from Parser_pdf import data_value
+
 
 
 

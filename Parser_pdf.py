@@ -1,5 +1,6 @@
 import os
 import pdfplumber
+from Work_excel import sp
 
 
 class Parser_pdf():
