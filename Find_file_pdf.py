@@ -2,7 +2,7 @@ import requests
 import time
 import os
 from qwe import cookies, headers
-from Work_excel import sp
+
 
 
 class Find_pdf_file():
@@ -31,7 +31,7 @@ class Find_pdf_file():
             count = 0
             while count < 5:
                 file = session.get(url=f'https://egrul.nalog.ru/vyp-status/{first_query_token}', timeout=20)
-                time.sleep(5)
+                time.sleep(3)
                 if file.json()['status'] == 'ready':
                     print(file.json()['status'])
                     break
@@ -52,6 +52,7 @@ class Find_pdf_file():
         with open(file_path, mode='wb') as file_pdf:
             file_pdf.write(file.content)
 
+
     def chek(self, znachenie):
         """Функция по проверке, есть ли уже пдф файл с значением инн,которое нужно спарсить"""
         flag = False
@@ -62,5 +63,5 @@ class Find_pdf_file():
         return flag
 
 
-pdf_files = Find_pdf_file()
-# pdf_files.query(sp[0])
+# pdf_files = Find_pdf_file()
+# # pdf_files.query(sp[0])

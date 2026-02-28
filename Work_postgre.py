@@ -1,5 +1,3 @@
-from Parser_pdf import data_value
-from Work_excel import sp
 import psycopg2
 from sqlalchemy import create_engine, inspect
 from config import user, password, host, db, port
@@ -44,6 +42,6 @@ class Append_table_postrge():
                     session.commit()
 
 
-app = Append_table_postrge()
+# app = Append_table_postrge()
 
 # app.app(data_value, sp[0], sp[1], sp[2])

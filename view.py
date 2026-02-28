@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, flash
 import os
 from werkzeug.utils import secure_filename
-# from model import read_excel
+
 
 app = Flask(__name__)
 app.secret_key = 'abracadabra'
@@ -46,10 +46,15 @@ def start():
             flash('Неверный тип данных, доступен только эксель', 'error')
         else:
             name = secure_filename(doc.filename)
+            print(name)
             new_name = create_unique_name(name)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_name)
             doc.save(file_path)
             upload_succees = True
+    # elif request.method == 'GET':
+        # from engine import Engine
+        # go = Engine()
+        # go.engine()
     return render_template('index.html', upload_succees=upload_succees)
 
 

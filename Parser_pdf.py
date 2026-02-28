@@ -1,6 +1,6 @@
 import os
 import pdfplumber
-from Work_excel import sp
+from Work_excel import Work_excel
 
 
 class Parser_pdf():
@@ -8,8 +8,9 @@ class Parser_pdf():
         list_file = []
         dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
         for file in os.listdir(dir):
-            abs_path = os.path.join(dir, file)
-            list_file.append(abs_path)
+            if self.chek_files(file) == True:
+                abs_path = os.path.join(dir, file)
+                list_file.append(abs_path)
         return list_file
 
 
@@ -62,7 +63,6 @@ class Parser_pdf():
                         break
         return list_data
 
-
     def change_value(self, value):
         if isinstance(value, str) and '\n' in value:
             new_value = value.replace('\n', ' ')
@@ -70,5 +70,15 @@ class Parser_pdf():
             new_value = value
         return new_value
 
-pars = Parser_pdf()
-data_value = pars.find_value()
+    def chek_files(self, file):
+        table = Work_excel()
+        sp = table.read_excel()
+        flag = False
+        for i in sp[0]:
+            if str(i) in file:
+                flag = True
+        return flag
+
+
+# pars = Parser_pdf()
+# data_value = pars.find_value()

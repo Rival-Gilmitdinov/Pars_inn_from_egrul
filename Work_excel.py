@@ -39,11 +39,11 @@ class Work_excel():
         return dannie, error_type, error_data
 
 
-table = Work_excel()
-sp = table.read_excel()
-print(sp[0])
-print(sp[1])
-print(sp[2])
+# table = Work_excel()
+# sp = table.read_excel()
+# print(sp[0])
+# print(sp[1])
+# print(sp[2])
 
 
 class Write_data():
@@ -75,7 +75,7 @@ class Write_data():
         book.close()
 
 
-move = Write_data()
+# move = Write_data()
 
 # move.write_in_excel(data_value, sp[0], sp[1], sp[2])
 

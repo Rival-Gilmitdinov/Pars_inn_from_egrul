@@ -1,17 +1,30 @@
-from Work_excel import sp
-from Find_file_pdf import pdf_files
-from Parser_pdf import pars
-from Work_postgre import app
-from Work_excel import move
+from Work_excel import Work_excel
+from Find_file_pdf import Find_pdf_file
+from Parser_pdf import Parser_pdf
+from Work_postgre import Append_table_postrge
+from Work_excel import Write_data
 
 
+class Engine():
+    def __init__(self):
+        table = Work_excel()
+        self.table = table
+        sp = table.read_excel()
+        self.sp = sp
+        self.move = Write_data()
+        self.pdf_files = Find_pdf_file()
+        self.pars = Parser_pdf()
+        self.data_value = self.pars.find_value()
+        self.app = Append_table_postrge()
 
-def engine():
-    pdf_files.query(sp[0])
-    data_value = pars.find_value()
-    print(data_value)
-    move.write_in_excel(data_value, sp[0], sp[1], sp[2])
-    app.app(data_value, sp[0], sp[1], sp[2])
+
+    def engine(self):
+        self.pdf_files.query(self.sp[0])
+        data_value = self.pars.find_value()
+        print(data_value)
+        self.move.write_in_excel(data_value, self.sp[0], self.sp[1], self.sp[2])
+        self.app.app(data_value, self.sp[0], self.sp[1], self.sp[2])
 
 
-engine()
+a = Engine()
+a.engine()
