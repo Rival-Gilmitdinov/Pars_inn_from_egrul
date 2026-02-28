@@ -2,6 +2,7 @@ import requests
 import time
 import os
 from qwe import cookies, headers
+from Work_postgre import chek
 
 
 
@@ -12,7 +13,7 @@ class Find_pdf_file():
         session = requests.Session()
         # Проходим циклом по списку из значений инн
         for value in table:
-            if self.chek(value) == True:
+            if value in chek.chek_data_from_postgre()[1]:
                 continue
             json = {'vyp3CaptchaToken': '',
                         'page': '',
@@ -53,14 +54,14 @@ class Find_pdf_file():
             file_pdf.write(file.content)
 
 
-    def chek(self, znachenie):
-        """Функция по проверке, есть ли уже пдф файл с значением инн,которое нужно спарсить"""
-        flag = False
-        dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
-        for file in os.listdir(dir):
-            if str(znachenie) in file:
-                flag = True
-        return flag
+    # def chek(self, znachenie):
+    #     """Функция по проверке, есть ли уже пдф файл с значением инн,которое нужно спарсить"""
+    #     flag = False
+    #     dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
+    #     for file in os.listdir(dir):
+    #         if str(znachenie) in file:
+    #             flag = True
+    #     return flag
 
 
 # pdf_files = Find_pdf_file()

@@ -9,7 +9,6 @@ app.secret_key = 'abracadabra'
 allowed_types = ['xlsx']
 
 
-
 def validation_file(filename):
     if '.' in filename:
         if filename.rsplit(sep='.')[1].lower() in allowed_types:
@@ -18,8 +17,6 @@ def validation_file(filename):
             return False
     else:
         return False
-
-
 
 
 @app.route('/', methods=['GET', 'POST'])

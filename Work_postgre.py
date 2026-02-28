@@ -1,18 +1,23 @@
+import datetime
+
 import psycopg2
 from sqlalchemy import create_engine, inspect
 from config import user, password, host, db, port
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, Session
+from datetime import date, timedelta
 
 engine = create_engine(f'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}')
 Base = declarative_base()
 
+
 class Inn(Base):
     __tablename__ = 'data_on_inn'
-    id : Mapped[int] = mapped_column(primary_key=True)
-    inn_company : Mapped[str | None]
-    name : Mapped[str | None]
-    capital : Mapped[str | None]
-    activity : Mapped[str | None]
+    id: Mapped[int] = mapped_column(primary_key=True)
+    inn_company: Mapped[str | None]
+    name: Mapped[str | None]
+    capital: Mapped[str | None]
+    activity: Mapped[str | None]
+    time_created: Mapped[date] = mapped_column(default=date.today())
 
 inspector = inspect(engine)
 if not inspector.has_table('data_on_inn'):
@@ -21,7 +26,9 @@ if not inspector.has_table('data_on_inn'):
 class Append_table_postrge():
     def app(self, spisok, list_inn, error_type, error_data):
         with Session(engine) as session:
-            session.query(Inn).delete()
+            target_date = date.today() - timedelta(days=10)
+            old_data = session.query(Inn).filter(Inn.time_created < target_date)
+            old_data.delete(synchronize_session=False)
             session.commit()
             for value in spisok:
                 n = 0
@@ -29,7 +36,7 @@ class Append_table_postrge():
                            activity=f'{value["Сведения об основном виде деятельности"]}')
                 n += 1
                 session.add(data)
-                session.commit()
+            session.commit()
             if error_type:
                 for key_error, value_error, in error_type.items():
                     data_error = Inn(inn_company=f'{key_error}', name=f'{value_error}')
@@ -41,7 +48,25 @@ class Append_table_postrge():
                     session.add(data_error_2)
                     session.commit()
 
+class Check_data():
 
+
+    def chek_data_from_postgre(self):
+        list_inn_from_postgre = []
+        target_date = date.today() - timedelta(days=10)
+        with Session(engine) as session:
+            results = session.query(Inn).filter(Inn.time_created >= target_date).all()
+            for value in results:
+                if value.inn_company.isdigit() and len(value.inn_company) == 10:
+                    list_inn_from_postgre.append(int(value.inn_company))
+        return results, list_inn_from_postgre
+
+
+
+chek = Check_data()
+# for results in chek.select_data_from_postgre():
+#     print(results.inn_company)
+# print(chek.chek_data_from_postgre()[1])
 # app = Append_table_postrge()
 
 # app.app(data_value, sp[0], sp[1], sp[2])

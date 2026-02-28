@@ -34,11 +34,8 @@
 </div>
 {% endif %}
 <form method="post" action="/" enctype="multipart/form-data">
-    <label> Загрузите файл эксель с данными инн<br><br><input type="file" name="file"></label><br><br>
-        <button type="submit">Загрузить</button>
-</form>
-<form method="get" action="/result" >
-    <button type="submit" class="btn-submit">Получить все данные</button>
+    <label> Загрузите файл эксель с данными инн и получите данные<br><br><input type="file" name="file"></label><br><br>
+        <button type="submit">Загрузить и получить данные</button>
 </form>
 
 {%endblock%}
