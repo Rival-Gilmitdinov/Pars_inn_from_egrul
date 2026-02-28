@@ -6,14 +6,12 @@ from Work_excel import Write_data
 
 
 class Engine():
-    def __init__(self):
-        table = Work_excel()
-        self.table = table
-        sp = table.read_excel()
-        self.sp = sp
+    def __init__(self, file):
+        self.table = Work_excel()
+        self.sp = self.table.read_excel(file)
         self.move = Write_data()
         self.pdf_files = Find_pdf_file()
-        self.pars = Parser_pdf()
+        self.pars = Parser_pdf(file)
         self.data_value = self.pars.find_value()
         self.app = Append_table_postrge()
 
@@ -26,5 +24,5 @@ class Engine():
         self.app.app(data_value, self.sp[0], self.sp[1], self.sp[2])
 
 
-a = Engine()
-a.engine()
+# a = Engine()
+# a.engine()

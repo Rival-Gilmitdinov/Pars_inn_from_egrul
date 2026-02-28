@@ -8,20 +8,20 @@ import os
 
 
 class Work_excel():
-    def find_file(self):
-        direct = os.path.dirname(__file__)
-        way_html = os.path.join(direct, 'uploads')
-        file = glob.glob(os.path.join(way_html, '*'))
-        new_file = max(file, key=os.path.getmtime)
-        return new_file
+    # def find_file(self):
+    #     direct = os.path.dirname(__file__)
+    #     way_html = os.path.join(direct, 'uploads')
+    #     file = glob.glob(os.path.join(way_html, '*'))
+    #     new_file = max(file, key=os.path.getmtime)
+    #     return new_file
 
 
-    def read_excel(self):
+    def read_excel(self, file):
         '''Функия по парсингу таблицы excel
         Return: dannie - список с данными инн
         error_type - словарь с неверными значениями и текстом ошибки
         error_data - словарь с неверными значениями и текстом ошибки'''
-        wb = load_workbook(self.find_file(), read_only=True)
+        wb = load_workbook(file, read_only=True)
         ws = wb.active
         dannie = []
         error_type = {}

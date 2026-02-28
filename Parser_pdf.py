@@ -4,6 +4,10 @@ from Work_excel import Work_excel
 
 
 class Parser_pdf():
+    def __init__(self, doc):
+        self.doc = doc
+
+
     def find_file(self):
         list_file = []
         dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
@@ -72,7 +76,7 @@ class Parser_pdf():
 
     def chek_files(self, file):
         table = Work_excel()
-        sp = table.read_excel()
+        sp = table.read_excel(self.doc)
         flag = False
         for i in sp[0]:
             if str(i) in file:
