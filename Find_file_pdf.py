@@ -8,6 +8,7 @@ from Work_postgre import chek
 
 class Find_pdf_file():
     def query(self, table):
+        self.delete_old_files()
         '''Функция по отправлению инн из excel файла, отправления запросов на сайт
         ЮГРЛ с целью получения пдф файла с данными об организации'''
         session = requests.Session()
@@ -53,16 +54,13 @@ class Find_pdf_file():
         with open(file_path, mode='wb') as file_pdf:
             file_pdf.write(file.content)
 
-
-    # def chek(self, znachenie):
-    #     """Функция по проверке, есть ли уже пдф файл с значением инн,которое нужно спарсить"""
-    #     flag = False
-    #     dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
-    #     for file in os.listdir(dir):
-    #         if str(znachenie) in file:
-    #             flag = True
-    #     return flag
+    def delete_old_files(self):
+        way_dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
+        for file in os.listdir(way_dir):
+            file_path = os.path.join(way_dir, file)
+            os.remove(file_path)
 
 
 # pdf_files = Find_pdf_file()
-# # pdf_files.query(sp[0])
+# # # # pdf_files.query(sp[0])
+# pdf_files.delete_old_files()

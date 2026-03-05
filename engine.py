@@ -12,13 +12,12 @@ class Engine():
         self.move = Write_data()
         self.pdf_files = Find_pdf_file()
         self.pars = Parser_pdf(file)
-        self.data_value = self.pars.find_value()
         self.app = Append_table_postrge()
 
 
     def engine(self):
         self.pdf_files.query(self.sp[0])
-        data_value = self.pars.find_value()
+        data_value = self.pars.find_value(self.sp[0])
         print(data_value)
         self.move.write_in_excel(data_value, self.sp[0], self.sp[1], self.sp[2])
         self.app.app(data_value, self.sp[0], self.sp[1], self.sp[2])

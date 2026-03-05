@@ -1,11 +1,13 @@
 import os
 import pdfplumber
 from Work_excel import Work_excel
+from Work_postgre import Check_data
 
 
 class Parser_pdf():
     def __init__(self, doc):
         self.doc = doc
+        self.chek = Check_data()
 
 
     def find_file(self):
@@ -18,12 +20,23 @@ class Parser_pdf():
         return list_file
 
 
-    def find_value(self):
+    def find_value(self, list_from_excel):
         list_file = self.find_file()
         parsing_data = {'Полное наименование на русском языке': None,
                         'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде': None,
                         'Сведения об основном виде деятельности': None}
         list_data = []
+        for value_inn_from_excel in list_from_excel:
+            if value_inn_from_excel in self.chek.chek_data_from_postgre()[1]:
+                for value_postgre in self.chek.pars_from_postgre(value_inn_from_excel):
+                    parsing_data['Полное наименование на русском языке'] = value_postgre.name
+                    parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
+                    parsing_data['Сведения об основном виде деятельности'] = value_postgre.activity
+                copy_dict = parsing_data.copy()
+                list_data.append(copy_dict)
+        print(list_data)
+        if not list_file:
+            return list_data
         # пробегаемся циклом по файлам из папки
         for file in list_file:
             Flag = False

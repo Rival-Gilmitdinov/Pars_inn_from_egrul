@@ -30,8 +30,8 @@ class Append_table_postrge():
             old_data = session.query(Inn).filter(Inn.time_created < target_date)
             old_data.delete(synchronize_session=False)
             session.commit()
+            n = 0
             for value in spisok:
-                n = 0
                 data = Inn(inn_company=f'{list_inn[n]}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
                            activity=f'{value["Сведения об основном виде деятельности"]}')
                 n += 1
@@ -49,8 +49,10 @@ class Append_table_postrge():
                     session.commit()
 
 class Check_data():
-
-
+    # def __init__(self, inn):
+    #     self.inn = inn
+    #
+    #
     def chek_data_from_postgre(self):
         list_inn_from_postgre = []
         target_date = date.today() - timedelta(days=10)
@@ -62,11 +64,19 @@ class Check_data():
         return results, list_inn_from_postgre
 
 
+    def pars_from_postgre(self, value):
+        with Session(engine) as session:
+            data_inn = session.query(Inn).filter(Inn.inn_company == str(value)).all()
+        return data_inn
+
 
 chek = Check_data()
-# for results in chek.select_data_from_postgre():
-#     print(results.inn_company)
+# for results in chek.chek_data_from_postgre()[0]:
+#     print(results)
 # print(chek.chek_data_from_postgre()[1])
 # app = Append_table_postrge()
 
 # app.app(data_value, sp[0], sp[1], sp[2])
+# for i in chek.pars_from_postgre('7736617998'):
+#     print(i.name, i.capital, i.activity)
+
