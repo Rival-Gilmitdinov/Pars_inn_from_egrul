@@ -32,6 +32,8 @@ class Append_table_postrge():
             session.commit()
             n = 0
             for value in spisok:
+                if list_inn[n] in chek.chek_data_from_postgre()[1]:
+                    continue
                 data = Inn(inn_company=f'{list_inn[n]}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
                            activity=f'{value["Сведения об основном виде деятельности"]}')
                 n += 1
