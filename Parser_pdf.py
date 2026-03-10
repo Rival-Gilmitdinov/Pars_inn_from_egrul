@@ -10,7 +10,8 @@ class Parser_pdf():
         self.chek = Check_data()
 
 
-    def find_file(self):
+    def find_file(self) -> list:
+        """Метод по нахождению файла и создания списка с полным путем к ним"""
         list_file = []
         dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
         for file in os.listdir(dir):
@@ -20,7 +21,11 @@ class Parser_pdf():
         return list_file
 
 
-    def find_value(self, list_from_excel):
+    def find_value(self, list_from_excel) -> list:
+        """Метод по парсингу пдф файла, сбор этих данных в каждый словарь и добавление этих словарей в один список
+        Parameters:
+            list_from_excel: list
+                Список с перечнем инн, по которым пользователь хочет получить данные"""
         list_file = self.find_file()
         parsing_data = {'Полное наименование на русском языке': None,
                         'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде': None,
@@ -80,22 +85,25 @@ class Parser_pdf():
                         break
         return list_data
 
-    def change_value(self, value):
+    def change_value(self, value) -> str:
+        """Метод по изменению строковых данных, спарсенных из пдф файла
+        Parameters:
+            value - str
+                Данные,спарсенные из пдф файла"""
         if isinstance(value, str) and '\n' in value:
             new_value = value.replace('\n', ' ')
         else:
             new_value = value
         return new_value
 
-    def chek_files(self, file):
-        table = Work_excel()
-        sp = table.read_excel(self.doc)
-        flag = False
-        for i in sp[0]:
-            if str(i) in file:
-                flag = True
-        return flag
+    # def chek_files(self, file) -> bool:
+    #     """Метод по проверке """
+    #     table = Work_excel()
+    #     sp = table.read_excel(self.doc)
+    #     flag = False
+    #     for i in sp[0]:
+    #         if str(i) in file:
+    #             flag = True
+    #     return flag
 
 
-# pars = Parser_pdf()
-# data_value = pars.find_value()

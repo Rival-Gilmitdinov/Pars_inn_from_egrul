@@ -1,16 +1,19 @@
 import requests
 import time
 import os
-from qwe import cookies, headers
+from qwe import headers
 from Work_postgre import chek
 
 
 
 class Find_pdf_file():
-    def query(self, table):
+    def query(self, table) -> None :
+        """Функция по удалению старых данных из папки и по отправлению инн из excel файла, отправления запросов на сайт
+        ЮГРЛ с целью получения пдф файла с данными об организации
+        Arguments:
+            table - list
+                Список с инн, по которым пользователь хочет получить данные"""
         self.delete_old_files()
-        '''Функция по отправлению инн из excel файла, отправления запросов на сайт
-        ЮГРЛ с целью получения пдф файла с данными об организации'''
         session = requests.Session()
         # Проходим циклом по списку из значений инн
         for value in table:
@@ -46,21 +49,20 @@ class Find_pdf_file():
             self.save_document(file_pdf, value)
 
 
-    def save_document(self, file, inn):
-        """Функция по сохранению пдф файла
-        file - полученный файл
-        inn - номер инн, спарсенный из excel"""
+    def save_document(self, file, inn) -> None:
+        """Метод по сохранению пдф файла
+        Arguments:
+            file - полученный файл
+            inn - номер инн, спарсенный из excel"""
         file_path = os.path.join('saving_pdf', f'{inn}_result_search_file.pdf')
         with open(file_path, mode='wb') as file_pdf:
             file_pdf.write(file.content)
 
-    def delete_old_files(self):
+    def delete_old_files(self) -> None:
+        """Метод по удалению файлов из папки"""
         way_dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
         for file in os.listdir(way_dir):
             file_path = os.path.join(way_dir, file)
             os.remove(file_path)
 
 
-# pdf_files = Find_pdf_file()
-# # # # pdf_files.query(sp[0])
-# pdf_files.delete_old_files()

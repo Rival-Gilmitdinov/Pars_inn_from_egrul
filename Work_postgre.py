@@ -1,5 +1,3 @@
-import datetime
-
 import psycopg2
 from sqlalchemy import create_engine, inspect
 from config import user, password, host, db, port
@@ -23,8 +21,19 @@ inspector = inspect(engine)
 if not inspector.has_table('data_on_inn'):
     Base.metadata.create_all(bind=engine)
 
+
 class Append_table_postrge():
-    def app(self, spisok, list_inn, error_type, error_data):
+    def app(self, spisok, list_inn, error_type, error_data) -> None:
+        """Метод по удалению старых данных и записи новых данных в базу данных
+        Parameters:
+            spisok: list
+                Список из словарей с парсенными данными
+            list_inn: list
+                Список с данными инн,по которым пользователю нужно данные
+            error_type - dict
+                словарь с неверными значениями и текстом ошибки
+            error_data - dict
+                словарь с неверными значениями и текстом ошибки"""
         with Session(engine) as session:
             target_date = date.today() - timedelta(days=10)
             old_data = session.query(Inn).filter(Inn.time_created < target_date)
@@ -51,11 +60,8 @@ class Append_table_postrge():
                     session.commit()
 
 class Check_data():
-    # def __init__(self, inn):
-    #     self.inn = inn
-    #
-    #
-    def chek_data_from_postgre(self):
+    def chek_data_from_postgre(self) -> list:
+        """Метод по проверке данных в базе данных на давность, в итоговый список добавляется только не старые данные"""
         list_inn_from_postgre = []
         target_date = date.today() - timedelta(days=10)
         with Session(engine) as session:
@@ -67,18 +73,14 @@ class Check_data():
 
 
     def pars_from_postgre(self, value):
+        """Метод по выборке данных из базы данных, по итогу выходит объект постгресса
+        Parameters:
+            value: int
+                Значение инн, по которым пользователю нужна информацию"""
         with Session(engine) as session:
             data_inn = session.query(Inn).filter(Inn.inn_company == str(value)).all()
         return data_inn
 
 
 chek = Check_data()
-# for results in chek.chek_data_from_postgre()[0]:
-#     print(results)
-# print(chek.chek_data_from_postgre()[1])
-# app = Append_table_postrge()
-
-# app.app(data_value, sp[0], sp[1], sp[2])
-# for i in chek.pars_from_postgre('7736617998'):
-#     print(i.name, i.capital, i.activity)
 
