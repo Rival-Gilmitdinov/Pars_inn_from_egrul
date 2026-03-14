@@ -27,6 +27,7 @@ class Parser_pdf():
             list_from_excel: list
                 Список с перечнем инн, по которым пользователь хочет получить данные"""
         list_file = self.find_file()
+        # print(f'парсер_пдф ---- список полных путей файлов {list_file}')
         parsing_data = {'Полное наименование на русском языке': None,
                         'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде': None,
                         'Сведения об основном виде деятельности': None}
@@ -39,7 +40,7 @@ class Parser_pdf():
                     parsing_data['Сведения об основном виде деятельности'] = value_postgre.activity
                 copy_dict = parsing_data.copy()
                 list_data.append(copy_dict)
-        print(list_data)
+                print(f'значение есть в посгре - {list_data}')
         if not list_file:
             return list_data
         # пробегаемся циклом по файлам из папки
@@ -67,14 +68,15 @@ class Parser_pdf():
                             if None not in parsing_data.values():
                                 safe_data = parsing_data
                                 list_data.append(safe_data.copy())
+                                print(f'По итогу в цикле парсер_пдф получается {list_data}')
                                 for key in parsing_data.keys():
                                     parsing_data[key] = None
                                 Flag = True
                                 break
                     except:
                         list_data.append('Данные в ЕГРЮЛ не найдены')
-                    if None in parsing_data:
-                        if i == count_pages:
+                    if None in parsing_data.values():
+                        if i == count_pages - 1:
                             safe_data = parsing_data
                             list_data.append(safe_data.copy())
                             for key in parsing_data.keys():
@@ -96,14 +98,14 @@ class Parser_pdf():
             new_value = value
         return new_value
 
-    # def chek_files(self, file) -> bool:
-    #     """Метод по проверке """
-    #     table = Work_excel()
-    #     sp = table.read_excel(self.doc)
-    #     flag = False
-    #     for i in sp[0]:
-    #         if str(i) in file:
-    #             flag = True
-    #     return flag
+    def chek_files(self, file) -> bool:
+        """Метод по проверке наличия инн, необходимого для получения данных и того файла, над которым ведется работа"""
+        table = Work_excel()
+        sp = table.read_excel(self.doc)
+        flag = False
+        for i in sp[0]:
+            if str(i) in file:
+                flag = True
+        return flag
 
 

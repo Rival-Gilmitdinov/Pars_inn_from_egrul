@@ -17,8 +17,11 @@ class Find_pdf_file():
         session = requests.Session()
         # Проходим циклом по списку из значений инн
         for value in table:
-            if value in chek.chek_data_from_postgre()[1]:
-                continue
+            try:
+                if value in chek.chek_data_from_postgre()[1]:
+                    continue
+            except:
+                pass
             json = {'vyp3CaptchaToken': '',
                         'page': '',
                         'query': f'{value}',
@@ -28,7 +31,11 @@ class Find_pdf_file():
             #Отправляем запрос в поисковую строку
             response = session.post(url='https://egrul.nalog.ru/', json=json).json()
             # Получаем результаты
-            get_value = session.get(url=f'https://egrul.nalog.ru/search-result/{response["t"]}')
+            try:
+                get_value = session.get(url=f'https://egrul.nalog.ru/search-result/{response["t"]}')
+            except:
+                print(f'Не удается получить ответ от сервеса по {value} инн')
+                continue
             token = get_value.json()['rows'][0]['t']
             # Создаем запрсо для обозначения статуса в будущем готовности документа к скачиванию
             first_query = session.get(url=f'https://egrul.nalog.ru/vyp-request/{token}')
