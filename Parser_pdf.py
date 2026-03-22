@@ -27,24 +27,32 @@ class Parser_pdf():
             list_from_excel: list
                 Список с перечнем инн, по которым пользователь хочет получить данные"""
         list_file = self.find_file()
-        # print(f'парсер_пдф ---- список полных путей файлов {list_file}')
-        parsing_data = {'Полное наименование на русском языке': None,
+        print(f'парсер_пдф ---- список полных путей файлов {list_file}')
+        parsing_data = {'инн': None,
+                        'Полное наименование на русском языке': None,
                         'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде': None,
                         'Сведения об основном виде деятельности': None}
         list_data = []
         for value_inn_from_excel in list_from_excel:
-            if value_inn_from_excel in self.chek.chek_data_from_postgre()[1]:
+            if str(value_inn_from_excel) in self.chek.chek_data_from_postgre()[1]:
                 for value_postgre in self.chek.pars_from_postgre(value_inn_from_excel):
+                    parsing_data['инн'] = value_inn_from_excel
                     parsing_data['Полное наименование на русском языке'] = value_postgre.name
                     parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
                     parsing_data['Сведения об основном виде деятельности'] = value_postgre.activity
                 copy_dict = parsing_data.copy()
                 list_data.append(copy_dict)
                 print(f'значение есть в посгре - {list_data}')
+                for file_in_dir in list_file:
+                    list_file.remove(file_in_dir)
         if not list_file:
             return list_data
         # пробегаемся циклом по файлам из папки
         for file in list_file:
+            for name_of_file in file.split('\\'):
+                if 'result_search_file' in name_of_file:
+                    inn = name_of_file.split('_')[0]
+                    parsing_data['инн'] = inn
             Flag = False
             with pdfplumber.open(file) as file:
                 # узнаем количество страниц
@@ -85,6 +93,7 @@ class Parser_pdf():
                             break
                     if Flag == True:
                         break
+        print(f'итоговое значение - {list_data}')
         return list_data
 
     def change_value(self, value) -> str:

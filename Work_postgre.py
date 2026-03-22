@@ -23,7 +23,7 @@ if not inspector.has_table('data_on_inn'):
 
 
 class Append_table_postrge():
-    def app(self, spisok, list_inn, error_type, error_data) -> None:
+    def app(self, spisok, error_type, error_data) -> None:
         """Метод по удалению старых данных и записи новых данных в базу данных
         Parameters:
             spisok: list
@@ -40,24 +40,31 @@ class Append_table_postrge():
             old_data.delete(synchronize_session=False)
             session.commit()
             n = 0
+            print(spisok)
+            print(chek.chek_data_from_postgre()[1])
             for value in spisok:
-                if list_inn[n] in chek.chek_data_from_postgre()[1]:
+                if str(value['инн']) in chek.chek_data_from_postgre()[1]:
                     continue
-                data = Inn(inn_company=f'{list_inn[n]}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
+                data = Inn(inn_company=f'{int(value["инн"])}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
                            activity=f'{value["Сведения об основном виде деятельности"]}')
                 n += 1
                 session.add(data)
             session.commit()
             if error_type:
                 for key_error, value_error, in error_type.items():
+                    if key_error in chek.chek_data_from_postgre()[1]:
+                        continue
                     data_error = Inn(inn_company=f'{key_error}', name=f'{value_error}')
                     session.add(data_error)
                     session.commit()
             if error_data:
                 for key_error_2, value_error_2, in error_data.items():
+                    if key_error in chek.chek_data_from_postgre()[1]:
+                        continue
                     data_error_2 = Inn(inn_company=f'{key_error_2}', name=f'{value_error_2}')
                     session.add(data_error_2)
                     session.commit()
+
 
 class Check_data():
     def chek_data_from_postgre(self) -> list:
@@ -67,8 +74,8 @@ class Check_data():
         with Session(engine) as session:
             results = session.query(Inn).filter(Inn.time_created >= target_date).all()
             for value in results:
-                if value.inn_company.isdigit() and len(value.inn_company) == 10:
-                    list_inn_from_postgre.append(int(value.inn_company))
+                # if value.inn_company.isdigit() and len(value.inn_company) == 10:
+                list_inn_from_postgre.append(value.inn_company)
         return results, list_inn_from_postgre
 
 

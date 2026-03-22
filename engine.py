@@ -20,6 +20,6 @@ class Engine():
         self.pdf_files.query(self.sp[0])
         data_value = self.pars.find_value(self.sp[0])
         print(self.sp)
-        self.move.write_in_excel(data_value, self.sp[0], self.sp[1], self.sp[2])
-        self.app.app(data_value, self.sp[0], self.sp[1], self.sp[2])
+        self.move.write_in_excel(data_value, self.sp[1], self.sp[2])
+        self.app.app(data_value, self.sp[1], self.sp[2])
 

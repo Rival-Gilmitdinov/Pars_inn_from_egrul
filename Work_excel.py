@@ -36,7 +36,7 @@ class Work_excel():
 
 
 class Write_data():
-    def write_in_excel(self, spisok, list_data_inn, error_type, error_data) -> None:
+    def write_in_excel(self, spisok, error_type, error_data) -> None:
         """Функция по записи данных в новую эксель таблицу
         Parameters:
             spisok: list
@@ -60,7 +60,7 @@ class Write_data():
         sheet['D1'] = 'Сведения об основном виде деятельности'
         n = 1
         for value in spisok:
-            sheet[n][0].value = list_data_inn[n - 1]
+            sheet[n][0].value = value['инн']
             sheet[n][1].value = value['Полное наименование на русском языке']
             sheet[n][2].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']
             sheet[n][3].value = value['Сведения об основном виде деятельности']
