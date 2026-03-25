@@ -2,9 +2,6 @@ import openpyxl
 from openpyxl import load_workbook
 import glob
 import os
-import os
-
-
 
 
 class Work_excel():
@@ -36,7 +33,7 @@ class Work_excel():
 
 
 class Write_data():
-    def write_in_excel(self, spisok, error_type, error_data) -> None:
+    def write_in_excel(self, data_value, error_type, error_data) -> None:
         """Функция по записи данных в новую эксель таблицу
         Parameters:
             spisok: list
@@ -59,7 +56,7 @@ class Write_data():
         sheet['C1'] = 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'
         sheet['D1'] = 'Сведения об основном виде деятельности'
         n = 1
-        for value in spisok:
+        for value in data_value:
             sheet[n][0].value = value['инн']
             sheet[n][1].value = value['Полное наименование на русском языке']
             sheet[n][2].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']

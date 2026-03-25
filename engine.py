@@ -8,7 +8,7 @@ from Work_excel import Write_data
 class Engine():
     def __init__(self, file):
         self.table = Work_excel()
-        self.sp = self.table.read_excel(file)
+        self.list_from_user_file = self.table.read_excel(file)
         self.move = Write_data()
         self.pdf_files = Find_pdf_file()
         self.pars = Parser_pdf(file)
@@ -17,9 +17,9 @@ class Engine():
 
     def engine(self):
         """Метод по запуску приложения"""
-        self.pdf_files.query(self.sp[0])
-        data_value = self.pars.find_value(self.sp[0])
-        print(self.sp)
-        self.move.write_in_excel(data_value, self.sp[1], self.sp[2])
-        self.app.app(data_value, self.sp[1], self.sp[2])
+        self.pdf_files.query(self.list_from_user_file[0])
+        data_value = self.pars.find_value(self.list_from_user_file[0])
+        print(self.list_from_user_file)
+        self.move.write_in_excel(data_value, self.list_from_user_file[1], self.list_from_user_file[2])
+        self.app.app(data_value, self.list_from_user_file[1], self.list_from_user_file[2])
 

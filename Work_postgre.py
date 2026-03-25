@@ -23,7 +23,7 @@ if not inspector.has_table('data_on_inn'):
 
 
 class Append_table_postrge():
-    def app(self, spisok, error_type, error_data) -> None:
+    def app(self, data_value, error_type, error_data) -> None:
         """Метод по удалению старых данных и записи новых данных в базу данных
         Parameters:
             spisok: list
@@ -40,9 +40,9 @@ class Append_table_postrge():
             old_data.delete(synchronize_session=False)
             session.commit()
             n = 0
-            print(spisok)
+            print(data_value)
             print(chek.chek_data_from_postgre()[1])
-            for value in spisok:
+            for value in data_value:
                 if str(value['инн']) in chek.chek_data_from_postgre()[1]:
                     continue
                 data = Inn(inn_company=f'{int(value["инн"])}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
