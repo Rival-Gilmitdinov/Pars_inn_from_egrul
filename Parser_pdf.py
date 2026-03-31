@@ -10,23 +10,23 @@ class Parser_pdf():
         self.chek = Check_data()
 
 
-    def find_file(self) -> list:
+    def find_file(self, path_dir) -> list:
         """Метод по нахождению файла и создания списка с полным путем к ним"""
         list_file = []
-        dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
-        for file in os.listdir(dir):
-            if self.chek_files(file) == True:
-                abs_path = os.path.join(dir, file)
-                list_file.append(abs_path)
+        # dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
+        for file in os.listdir(path_dir):
+            # if self.chek_files(file) == True:
+            abs_path = os.path.join(path_dir, file)
+            list_file.append(abs_path)
         return list_file
 
 
-    def find_value(self, list_from_excel) -> list:
+    def find_value(self, list_from_excel, path_dir) -> list:
         """Метод по парсингу пдф файла, сбор этих данных в каждый словарь и добавление этих словарей в один список
         Parameters:
             list_from_excel: list
                 Список с перечнем инн, по которым пользователь хочет получить данные"""
-        list_file = self.find_file()
+        list_file = self.find_file(path_dir)
         print(f'парсер_пдф ---- список полных путей файлов {list_file}')
         parsing_data = {'инн': None,
                         'Полное наименование на русском языке': None,
@@ -35,7 +35,7 @@ class Parser_pdf():
         list_data = []
         for value_inn_from_excel in list_from_excel:
             if str(value_inn_from_excel) in self.chek.chek_data_from_postgre()[1]:
-                for value_postgre in self.chek.pars_from_postgre(value_inn_from_excel):
+                for value_postgre in self.chek.pars_from_postgre(int(value_inn_from_excel)):
                     parsing_data['инн'] = value_inn_from_excel
                     parsing_data['Полное наименование на русском языке'] = value_postgre.name
                     parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
@@ -44,7 +44,9 @@ class Parser_pdf():
                 list_data.append(copy_dict)
                 print(f'значение есть в посгре - {list_data}')
                 for file_in_dir in list_file:
-                    list_file.remove(file_in_dir)
+                    if str(value_inn_from_excel) in file_in_dir:
+                        list_file.remove(file_in_dir)
+        print(f'после проверки на наличие данных в постгрессе у нас выходит такой списко файлов {list_file}')
         if not list_file:
             return list_data
         # пробегаемся циклом по файлам из папки
@@ -107,14 +109,14 @@ class Parser_pdf():
             new_value = value
         return new_value
 
-    def chek_files(self, file) -> bool:
-        """Метод по проверке наличия инн, необходимого для получения данных и того файла, над которым ведется работа"""
-        table = Work_excel()
-        sp = table.read_excel(self.doc)
-        flag = False
-        for i in sp[0]:
-            if str(i) in file:
-                flag = True
-        return flag
+    # def chek_files(self, file) -> bool:
+    #     """Метод по проверке наличия инн, необходимого для получения данных и того файла, над которым ведется работа"""
+    #     table = Work_excel()
+    #     sp = table.read_excel(self.doc)
+    #     flag = False
+    #     for i in sp[0]:
+    #         if str(i) in file:
+    #             flag = True
+    #     return flag
 
 

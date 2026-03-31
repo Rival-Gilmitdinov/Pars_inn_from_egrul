@@ -41,7 +41,7 @@ class Append_table_postrge():
             session.commit()
             n = 0
             print(data_value)
-            print(chek.chek_data_from_postgre()[1])
+            print(f' в постгрессе сейчас такая залупа {chek.chek_data_from_postgre()[1]}')
             for value in data_value:
                 if str(value['инн']) in chek.chek_data_from_postgre()[1]:
                     continue
@@ -67,7 +67,7 @@ class Append_table_postrge():
 
 
 class Check_data():
-    def chek_data_from_postgre(self) -> list:
+    def chek_data_from_postgre(self) -> tuple:
         """Метод по проверке данных в базе данных на давность, в итоговый список добавляется только не старые данные"""
         list_inn_from_postgre = []
         target_date = date.today() - timedelta(days=10)

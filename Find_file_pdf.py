@@ -7,18 +7,19 @@ from Work_postgre import chek
 
 
 class Find_pdf_file():
-    def query(self, table) -> None :
+    def query(self, table, path_dir) -> None :
         """Функция по удалению старых данных из папки и по отправлению инн из excel файла, отправления запросов на сайт
         ЮГРЛ с целью получения пдф файла с данными об организации
         Arguments:
             table - list
                 Список с инн, по которым пользователь хочет получить данные"""
-        self.delete_old_files()
+        # self.delete_old_files()
         session = requests.Session()
         # Проходим циклом по списку из значений инн
+        baza_dannih = chek.chek_data_from_postgre()[1]
         for value in table:
             try:
-                if value in chek.chek_data_from_postgre()[1]:
+                if str(value) in baza_dannih:
                     continue
             except:
                 pass
@@ -34,7 +35,7 @@ class Find_pdf_file():
             try:
                 get_value = session.get(url=f'https://egrul.nalog.ru/search-result/{response["t"]}')
             except:
-                print(f'Не удается получить ответ от сервеса по {value} инн')
+                print(f'Не удается получить ответ от сервиса по {value} инн')
                 continue
             token = get_value.json()['rows'][0]['t']
             # Создаем запрсо для обозначения статуса в будущем готовности документа к скачиванию
@@ -53,17 +54,18 @@ class Find_pdf_file():
             if file.json()['status'] == 'ready':
                 # Отправляем запрос для получения файла
                 file_pdf = session.get(url=f'https://egrul.nalog.ru/vyp-download/{token}', headers=headers)
-            self.save_document(file_pdf, value)
+            self.save_document(file_pdf, value, path_dir)
 
 
-    def save_document(self, file, inn) -> None:
+    def save_document(self, file, inn, path_dir) -> None:
         """Метод по сохранению пдф файла
         Arguments:
             file - полученный файл
             inn - номер инн, спарсенный из excel"""
-        file_path = os.path.join('saving_pdf', f'{inn}_result_search_file.pdf')
+        file_path = os.path.join(path_dir, f'{inn}_result_search_file.pdf')
         with open(file_path, mode='wb') as file_pdf:
             file_pdf.write(file.content)
+
 
     def delete_old_files(self) -> None:
         """Метод по удалению файлов из папки"""

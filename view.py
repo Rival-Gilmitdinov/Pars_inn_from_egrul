@@ -36,18 +36,20 @@ def start():
 
     return render_template('index.html')
 
+
 @app.route('/result', methods=['GET', 'POST'])
 def result():
     list_files = os.listdir('C:\Python\pythonProject\\2025\work_inn')
     if 'result_data.xlsx' in list_files:
         file_path = 'C:\Python\pythonProject\\2025\work_inn\\result_data.xlsx'
         filename = 'result_data.xlsx'
-        return  send_file(
+        return send_file(
                 file_path,
                 as_attachment=True,
                 download_name=filename,
                 mimetype='application/octet-stream'
             )
+
 
 if __name__ == '__main__':
     app.run(debug=True)

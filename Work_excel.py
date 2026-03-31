@@ -5,7 +5,7 @@ import os
 
 
 class Work_excel():
-    def read_excel(self, file) -> list:
+    def read_excel(self, file) -> tuple:
         '''Функия по парсингу таблицы excel
         file : файл, который загружает пользователь
         Return: list_data_inn - list
@@ -22,14 +22,19 @@ class Work_excel():
         # Проходим циклом по значениям таблицы
         for row in ws.iter_rows(values_only=True):
             for value in range(len(row)):
-                if type(row[value]) == int:
-                    if 10 ** 11 <= row[value] < 10 ** 12 or 10 ** 9 <= row[value] < 10 ** 10:
-                        list_data_inn.append(row[value])
+                if type(row[value]) == int or (type(row[value]) == str and row[value].isdigit()):
+                    if len(str(row[value])) == 10 or len(str(row[value])) == 12:
+                        list_data_inn.append(int(row[value]))
                     else:
                         error_data.setdefault(row[value], 'Неверное количество цифр инн')
                 else:
                     error_type.setdefault(row[value], 'Неверный тип данных')
-        return list_data_inn, error_type, error_data
+        name_split = file.filename.rsplit('.')[0]
+        path_dir = f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}'
+        if name_split not in os.listdir('C:\Python\pythonProject\\2025\work_inn\saving_pdf'):
+            os.mkdir(path_dir)
+        return list_data_inn, error_type, error_data, path_dir
+
 
 
 class Write_data():
@@ -74,6 +79,7 @@ class Write_data():
                 n += 1
         book.save('result_data.xlsx')
         book.close()
+
 
 
 

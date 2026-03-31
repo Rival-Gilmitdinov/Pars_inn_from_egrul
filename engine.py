@@ -17,8 +17,8 @@ class Engine():
 
     def engine(self):
         """Метод по запуску приложения"""
-        self.pdf_files.query(self.list_from_user_file[0])
-        data_value = self.pars.find_value(self.list_from_user_file[0])
+        self.pdf_files.query(self.list_from_user_file[0], self.list_from_user_file[3])
+        data_value = self.pars.find_value(self.list_from_user_file[0], self.list_from_user_file[3])
         print(self.list_from_user_file)
         self.move.write_in_excel(data_value, self.list_from_user_file[1], self.list_from_user_file[2])
         self.app.app(data_value, self.list_from_user_file[1], self.list_from_user_file[2])
