@@ -67,7 +67,7 @@ class Append_table_postrge():
 
 
 class Check_data():
-    def chek_data_from_postgre(self) -> list:
+    def check_data_from_postgre(self) -> list:
         """Метод по проверке данных в базе данных на давность, в итоговый список добавляется только не старые данные"""
         list_inn_from_postgre = []
         target_date = date.today() - timedelta(days=10)

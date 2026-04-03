@@ -6,7 +6,6 @@ from Work_postgre import Check_data
 
 class Parser_pdf():
     def __init__(self):
-        # self.doc = doc
         self.check = Check_data()
 
 
@@ -15,9 +14,9 @@ class Parser_pdf():
         list_file = []
         # dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
         for file in os.listdir(path_dir):
-            # if self.chek_files(file) == True:
-            abs_path = os.path.join(path_dir, file)
-            list_file.append(abs_path)
+            if 'pdf' in file:
+                abs_path = os.path.join(path_dir, file)
+                list_file.append(abs_path)
         return list_file
 
 

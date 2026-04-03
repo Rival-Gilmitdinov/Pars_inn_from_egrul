@@ -35,12 +35,11 @@ class Work_excel():
         path_dir = f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}'
         if name_split not in os.listdir('C:\Python\pythonProject\\2025\work_inn\saving_pdf'):
             os.mkdir(path_dir)
-        return list_data_inn, error_type, error_data, path_dir
-
+        return list_data_inn, error_type, error_data, path_dir, name_split
 
 
 class Write_data():
-    def write_in_excel(self, data_value, error_type, error_data) -> None:
+    def write_in_excel(self, data_value, error_type, error_data, name_split) -> None:
         """Функция по записи данных в новую эксель таблицу
         Parameters:
             spisok: list
@@ -79,7 +78,7 @@ class Write_data():
                 sheet[n][0].value = key_error_data
                 sheet[n][1].value = value_error_data
                 n += 1
-        book.save('result_data.xlsx')
+        book.save(f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}\\result_data_{name_split}.xlsx')
         book.close()
 
 
