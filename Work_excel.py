@@ -27,6 +27,8 @@ class Work_excel():
                         list_data_inn.append(int(row[value]))
                     else:
                         error_data.setdefault(row[value], 'Неверное количество цифр инн')
+                elif row[value] == None:
+                    continue
                 else:
                     error_type.setdefault(row[value], 'Неверный тип данных')
         name_split = file.filename.rsplit('.')[0]

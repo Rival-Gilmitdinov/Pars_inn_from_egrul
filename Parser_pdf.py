@@ -5,9 +5,9 @@ from Work_postgre import Check_data
 
 
 class Parser_pdf():
-    def __init__(self, doc):
-        self.doc = doc
-        self.chek = Check_data()
+    def __init__(self):
+        # self.doc = doc
+        self.check = Check_data()
 
 
     def find_file(self, path_dir) -> list:
@@ -21,7 +21,7 @@ class Parser_pdf():
         return list_file
 
 
-    def find_value(self, list_from_excel, path_dir) -> list:
+    def find_value(self, list_from_excel, path_dir, list_inn_from_postgre) -> list:
         """Метод по парсингу пдф файла, сбор этих данных в каждый словарь и добавление этих словарей в один список
         Parameters:
             list_from_excel: list
@@ -33,10 +33,12 @@ class Parser_pdf():
                         'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде': None,
                         'Сведения об основном виде деятельности': None}
         list_data = []
+        # Пробегаемся циклом по инн, которые были спарсены из экселя, который загрузил пользователь
         for value_inn_from_excel in list_from_excel:
-            if str(value_inn_from_excel) in self.chek.chek_data_from_postgre()[1]:
-                for value_postgre in self.chek.pars_from_postgre(int(value_inn_from_excel)):
-                    parsing_data['инн'] = value_inn_from_excel
+            # Проверка, если такой инн в базе данных
+            if str(value_inn_from_excel) in list_inn_from_postgre:
+                for value_postgre in self.check.pars_from_postgre(int(value_inn_from_excel)):
+                    parsing_data['инн'] = int(value_postgre.inn_company)
                     parsing_data['Полное наименование на русском языке'] = value_postgre.name
                     parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
                     parsing_data['Сведения об основном виде деятельности'] = value_postgre.activity
@@ -46,15 +48,18 @@ class Parser_pdf():
                 for file_in_dir in list_file:
                     if str(value_inn_from_excel) in file_in_dir:
                         list_file.remove(file_in_dir)
+        if None not in parsing_data.values():
+            for keys in parsing_data.keys():
+                parsing_data[keys] = None
         print(f'после проверки на наличие данных в постгрессе у нас выходит такой списко файлов {list_file}')
         if not list_file:
             return list_data
         # пробегаемся циклом по файлам из папки
         for file in list_file:
-            for name_of_file in file.split('\\'):
-                if 'result_search_file' in name_of_file:
-                    inn = name_of_file.split('_')[0]
-                    parsing_data['инн'] = inn
+            # for name_of_file in file.split('\\'):
+            #     if 'result_search_file' in name_of_file:
+            #         inn = name_of_file.split('_')[0]
+            #         parsing_data['инн'] = inn
             Flag = False
             with pdfplumber.open(file) as file:
                 # узнаем количество страниц
@@ -66,6 +71,8 @@ class Parser_pdf():
                     # пробегаемся по строкам в поисках необходимых значений
                     try:
                         for value in tables:
+                            if 'ИНН юридического лица' in value:
+                                parsing_data['инн'] = value[2]
                             if 'Полное наименование на русском языке' in value:
                                 new_value = self.change_value(value[2])
                                 parsing_data['Полное наименование на русском языке'] = new_value
@@ -85,7 +92,7 @@ class Parser_pdf():
                                 break
                     except:
                         list_data.append('Данные в ЕГРЮЛ не найдены')
-                    if None in parsing_data.values():
+                    if 1 < list(parsing_data.values()).count(None) < 5:
                         if i == count_pages - 1:
                             safe_data = parsing_data
                             list_data.append(safe_data.copy())
@@ -119,4 +126,6 @@ class Parser_pdf():
     #             flag = True
     #     return flag
 
-
+# pars = Parser_pdf()
+# print(pars.find_value([3444051154, 6319054636], 'C:\Python\pythonProject\\2025\work_inn\saving_pdf\еще один пробный файл', []))
+#

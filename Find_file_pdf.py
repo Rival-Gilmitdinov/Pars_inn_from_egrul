@@ -2,12 +2,12 @@ import requests
 import time
 import os
 from qwe import headers
-from Work_postgre import chek
+
 
 
 
 class Find_pdf_file():
-    def query(self, table, path_dir) -> None :
+    def query(self, table, path_dir, list_inn_from_postgre) -> None :
         """Функция по удалению старых данных из папки и по отправлению инн из excel файла, отправления запросов на сайт
         ЮГРЛ с целью получения пдф файла с данными об организации
         Arguments:
@@ -16,10 +16,9 @@ class Find_pdf_file():
         # self.delete_old_files()
         session = requests.Session()
         # Проходим циклом по списку из значений инн
-        baza_dannih = chek.chek_data_from_postgre()[1]
         for value in table:
             try:
-                if str(value) in baza_dannih:
+                if str(value) in list_inn_from_postgre:
                     continue
             except:
                 pass
