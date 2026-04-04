@@ -23,7 +23,7 @@ if not inspector.has_table('data_on_inn'):
 
 
 class Append_table_postrge():
-    def app(self, data_value, error_type, error_data, list_inn_from_postgre) -> None:
+    def app(self, data_value, error_data, list_inn_from_postgre) -> None:
         """Метод по удалению старых данных и записи новых данных в базу данных
         Parameters:
             spisok: list
@@ -39,29 +39,22 @@ class Append_table_postrge():
             old_data = session.query(Inn).filter(Inn.time_created < target_date)
             old_data.delete(synchronize_session=False)
             session.commit()
-            n = 0
+            # n = 0
             print(data_value)
-            print(f' в постгрессе сейчас такая залупа {list_inn_from_postgre}')
+            print(f' в постгрессе сейчас такие данные {list_inn_from_postgre}')
             for value in data_value:
                 if str(value['инн']) in list_inn_from_postgre:
                     continue
                 data = Inn(inn_company=f'{int(value["инн"])}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
                            activity=f'{value["Сведения об основном виде деятельности"]}')
-                n += 1
+                # n += 1
                 session.add(data)
             session.commit()
-            if error_type:
-                for key_error, value_error, in error_type.items():
-                    if key_error in list_inn_from_postgre:
-                        continue
-                    data_error = Inn(inn_company=f'{key_error}', name=f'{value_error}')
-                    session.add(data_error)
-                    session.commit()
             if error_data:
-                for key_error_2, value_error_2, in error_data.items():
+                for key_error, value_error, in error_data.items():
                     if key_error in list_inn_from_postgre:
                         continue
-                    data_error_2 = Inn(inn_company=f'{key_error_2}', name=f'{value_error_2}')
+                    data_error_2 = Inn(inn_company=f'{key_error}', name=f'{value_error}')
                     session.add(data_error_2)
                     session.commit()
 

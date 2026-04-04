@@ -7,13 +7,12 @@ from qwe import headers
 
 
 class Find_pdf_file():
-    def query(self, table, path_dir, list_inn_from_postgre) -> None :
+    def query(self, table, path_dir, list_inn_from_postgre) -> dict :
         """Функция по удалению старых данных из папки и по отправлению инн из excel файла, отправления запросов на сайт
         ЮГРЛ с целью получения пдф файла с данными об организации
         Arguments:
             table - list
                 Список с инн, по которым пользователь хочет получить данные"""
-        # self.delete_old_files()
         session = requests.Session()
         # Проходим циклом по списку из значений инн
         for value in table:
@@ -54,6 +53,7 @@ class Find_pdf_file():
                 # Отправляем запрос для получения файла
                 file_pdf = session.get(url=f'https://egrul.nalog.ru/vyp-download/{token}', headers=headers)
             self.save_document(file_pdf, value, path_dir)
+
 
 
     def save_document(self, file, inn, path_dir) -> None:

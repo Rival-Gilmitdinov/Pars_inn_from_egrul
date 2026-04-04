@@ -17,7 +17,6 @@ class Work_excel():
         wb = load_workbook(file, read_only=True)
         ws = wb.active
         list_data_inn = []
-        error_type = {}
         error_data = {}
         # Проходим циклом по значениям таблицы
         for row in ws.iter_rows(values_only=True):
@@ -30,16 +29,16 @@ class Work_excel():
                 elif row[value] == None:
                     continue
                 else:
-                    error_type.setdefault(row[value], 'Неверный тип данных')
+                    error_data.setdefault(row[value], 'Неверный тип данных')
         name_split = file.filename.rsplit('.')[0]
         path_dir = f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}'
         if name_split not in os.listdir('C:\Python\pythonProject\\2025\work_inn\saving_pdf'):
             os.mkdir(path_dir)
-        return list_data_inn, error_type, error_data, path_dir, name_split
+        return list_data_inn, error_data, path_dir, name_split
 
 
 class Write_data():
-    def write_in_excel(self, data_value, error_type, error_data, name_split) -> None:
+    def write_in_excel(self, data_value, error_data, name_split) -> None:
         """Функция по записи данных в новую эксель таблицу
         Parameters:
             spisok: list
@@ -68,11 +67,6 @@ class Write_data():
             sheet[n][2].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']
             sheet[n][3].value = value['Сведения об основном виде деятельности']
             n += 1
-        if error_type:
-            for key_error_type, value_error_type in error_type.items():
-                sheet[n][0].value = key_error_type
-                sheet[n][1].value = value_error_type
-                n += 1
         if error_data:
             for key_error_data, value_error_data in error_data.items():
                 sheet[n][0].value = key_error_data

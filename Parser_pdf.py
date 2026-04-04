@@ -47,7 +47,7 @@ class Parser_pdf():
                 for file_in_dir in list_file:
                     if str(value_inn_from_excel) in file_in_dir:
                         list_file.remove(file_in_dir)
-        if None not in parsing_data.values():
+        if list(parsing_data.values()).count(None) >= 1:
             for keys in parsing_data.keys():
                 parsing_data[keys] = None
         print(f'после проверки на наличие данных в постгрессе у нас выходит такой списко файлов {list_file}')
@@ -91,7 +91,7 @@ class Parser_pdf():
                                 break
                     except:
                         list_data.append('Данные в ЕГРЮЛ не найдены')
-                    if 1 < list(parsing_data.values()).count(None) < 5:
+                    if 1 <= list(parsing_data.values()).count(None) < 5:
                         if i == count_pages - 1:
                             safe_data = parsing_data
                             list_data.append(safe_data.copy())

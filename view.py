@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash, send_file, session
 import os
 from werkzeug.utils import secure_filename
 
-from engine import Engine
+
 
 app = Flask(__name__)
 app.secret_key = 'abracadabra'
@@ -22,7 +22,7 @@ def validation_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def start():
-    flag = False
+    succes = False
     if request.method == 'POST':
         doc = request.files['file']
         session['name_file'] = doc.filename.rsplit('.')[0]
@@ -33,9 +33,11 @@ def start():
         elif validation_file(doc.filename) == False:
             flash('Неверный тип данных, доступен только эксель', 'error')
         else:
+            from engine import Engine
             go = Engine(doc)
             go.engine()
-    return render_template('index.html')
+            succes = True
+    return render_template('index.html', succes=succes)
 
 
 @app.route('/result', methods=['GET', 'POST'])
