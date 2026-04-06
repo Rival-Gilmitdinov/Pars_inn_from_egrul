@@ -7,7 +7,11 @@ from qwe import headers
 
 
 class Find_pdf_file():
-    def query(self, table, path_dir, list_inn_from_postgre) -> dict :
+    def __init__(self):
+        self.error_response = {}
+
+
+    def query(self, table, path_dir, list_inn_from_postgre) -> None :
         """Функция по удалению старых данных из папки и по отправлению инн из excel файла, отправления запросов на сайт
         ЮГРЛ с целью получения пдф файла с данными об организации
         Arguments:
@@ -33,6 +37,7 @@ class Find_pdf_file():
             try:
                 get_value = session.get(url=f'https://egrul.nalog.ru/search-result/{response["t"]}')
             except:
+                self.error_response.setdefault(value, 'Не удается получить ответ от сервиса')
                 print(f'Не удается получить ответ от сервиса по {value} инн')
                 continue
             token = get_value.json()['rows'][0]['t']
@@ -74,3 +79,9 @@ class Find_pdf_file():
             os.remove(file_path)
 
 
+# def error_response(value=None):
+#     error_response_message = {}
+#     error_response_message.setdefault(value, 'Не удается получить ответ от сервиса')
+#     if value == 'Очистить словарь':
+#         error_response_message.clear()
+#     return error_response_message

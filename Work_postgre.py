@@ -23,7 +23,7 @@ if not inspector.has_table('data_on_inn'):
 
 
 class Append_table_postrge():
-    def app(self, data_value, error_data, list_inn_from_postgre) -> None:
+    def app(self, data_value, error_data, list_inn_from_postgre, error_response) -> None:
         """Метод по удалению старых данных и записи новых данных в базу данных
         Parameters:
             spisok: list
@@ -54,7 +54,14 @@ class Append_table_postrge():
                 for key_error, value_error, in error_data.items():
                     if key_error in list_inn_from_postgre:
                         continue
-                    data_error_2 = Inn(inn_company=f'{key_error}', name=f'{value_error}')
+                    data_error = Inn(inn_company=f'{key_error}', name=f'{value_error}')
+                    session.add(data_error)
+                    session.commit()
+            if error_response:
+                for key_error_2, value_error_2, in error_response.items():
+                    if key_error_2 in list_inn_from_postgre:
+                        continue
+                    data_error_2 = Inn(inn_company=f'{key_error_2}', name=f'{value_error_2}')
                     session.add(data_error_2)
                     session.commit()
 

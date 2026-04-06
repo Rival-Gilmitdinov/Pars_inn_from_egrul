@@ -38,7 +38,7 @@ class Work_excel():
 
 
 class Write_data():
-    def write_in_excel(self, data_value, error_data, name_split) -> None:
+    def write_in_excel(self, data_value, error_data, name_split, error_response) -> None:
         """Функция по записи данных в новую эксель таблицу
         Parameters:
             spisok: list
@@ -72,6 +72,10 @@ class Write_data():
                 sheet[n][0].value = key_error_data
                 sheet[n][1].value = value_error_data
                 n += 1
+        elif error_response:
+            for key, value in error_response.items():
+                sheet[n][0].value = key
+                sheet[n][1].value = value
         book.save(f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}\\result_data_{name_split}.xlsx')
         book.close()
 
