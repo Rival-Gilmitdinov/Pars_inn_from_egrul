@@ -35,9 +35,9 @@ class Parser_pdf():
         # Пробегаемся циклом по инн, которые были спарсены из экселя, который загрузил пользователь
         for value_inn_from_excel in list_from_excel:
             # Проверка, если такой инн в базе данных
-            if str(value_inn_from_excel) in list_inn_from_postgre:
+            if value_inn_from_excel in list_inn_from_postgre:
                 for value_postgre in self.check.pars_from_postgre(int(value_inn_from_excel)):
-                    parsing_data['инн'] = int(value_postgre.inn_company)
+                    parsing_data['инн'] = value_postgre.inn_company
                     parsing_data['Полное наименование на русском языке'] = value_postgre.name
                     parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
                     parsing_data['Сведения об основном виде деятельности'] = value_postgre.activity
@@ -45,7 +45,7 @@ class Parser_pdf():
                 list_data.append(copy_dict)
                 print(f'значение есть в посгре - {list_data}')
                 for file_in_dir in list_file:
-                    if str(value_inn_from_excel) in file_in_dir:
+                    if value_inn_from_excel in file_in_dir:
                         list_file.remove(file_in_dir)
         if list(parsing_data.values()).count(None) >= 1:
             for keys in parsing_data.keys():
@@ -72,6 +72,7 @@ class Parser_pdf():
                         for value in tables:
                             if 'ИНН юридического лица' in value:
                                 parsing_data['инн'] = value[2]
+                                print(f'тип данных ----- {type(value[2])}')
                             if 'Полное наименование на русском языке' in value:
                                 new_value = self.change_value(value[2])
                                 parsing_data['Полное наименование на русском языке'] = new_value

@@ -23,7 +23,7 @@ class Work_excel():
             for value in range(len(row)):
                 if type(row[value]) == int or (type(row[value]) == str and row[value].isdigit()):
                     if len(str(row[value])) == 10 or len(str(row[value])) == 12:
-                        list_data_inn.append(int(row[value]))
+                        list_data_inn.append(str(row[value]))
                     else:
                         error_data.setdefault(row[value], 'Неверное количество цифр инн')
                 elif row[value] == None:
@@ -38,6 +38,10 @@ class Work_excel():
 
 
 class Write_data():
+    def __init__(self):
+        self.book = openpyxl.Workbook()
+        self.sheet = self.book.active
+
     def write_in_excel(self, data_value, error_data, name_split, error_response) -> None:
         """Функция по записи данных в новую эксель таблицу
         Parameters:
@@ -54,30 +58,49 @@ class Write_data():
                     key - данные, которые передал пользователь
                     value - сообщение о неверном данном
         """
-        book = openpyxl.Workbook()
-        sheet = book.active
-        sheet['A1'] = 'ИНН'
-        sheet['B1'] = 'Полное наименование на русском языке'
-        sheet['C1'] = 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'
-        sheet['D1'] = 'Сведения об основном виде деятельности'
+        self.sheet['A1'] = 'ИНН'
+        self.sheet['B1'] = 'Полное наименование на русском языке'
+        self.sheet['C1'] = 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'
+        self.sheet['D1'] = 'Сведения об основном виде деятельности'
         n = 1
         for value in data_value:
-            sheet[n][0].value = value['инн']
-            sheet[n][1].value = value['Полное наименование на русском языке']
-            sheet[n][2].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']
-            sheet[n][3].value = value['Сведения об основном виде деятельности']
+            self.sheet[n][0].value = value['инн']
+            self.sheet[n][1].value = value['Полное наименование на русском языке']
+            self.sheet[n][2].value = value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']
+            self.sheet[n][3].value = value['Сведения об основном виде деятельности']
             n += 1
         if error_data:
             for key_error_data, value_error_data in error_data.items():
-                sheet[n][0].value = key_error_data
-                sheet[n][1].value = value_error_data
+                self.sheet[n][0].value = key_error_data
+                self.sheet[n][1].value = value_error_data
                 n += 1
         elif error_response:
             for key, value in error_response.items():
-                sheet[n][0].value = key
-                sheet[n][1].value = value
-        book.save(f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}\\result_data_{name_split}.xlsx')
-        book.close()
+                self.sheet[n][0].value = key
+                self.sheet[n][1].value = value
+        self.width_column(data_value)
+        self.book.save(f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}\\result_data_{name_split}.xlsx')
+        self.book.close()
+
+    def width_column(self, data_value):
+        max_lenght_inn = 0
+        max_lenght_name = 0
+        max_lenght_capital = 0
+        max_lenght_activity = 0
+        for value in data_value:
+            if len(value['инн']) >= max_lenght_inn:
+                max_lenght_inn = len(value['инн'])
+            if len(value['Полное наименование на русском языке']) >= max_lenght_name:
+                max_lenght_name = len(value['Полное наименование на русском языке'])
+            if len(value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']) >= max_lenght_capital:
+                max_lenght_capital = len(value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'])
+            if len(value['Сведения об основном виде деятельности']) >= max_lenght_activity:
+                max_lenght_activity = len(value['Сведения об основном виде деятельности'])
+        self.sheet.column_dimensions['A'].width = max_lenght_inn + 2
+        self.sheet.column_dimensions['B'].width = max_lenght_name + 2
+        self.sheet.column_dimensions['C'].width = max_lenght_capital + 2
+        self.sheet.column_dimensions['D'].width = max_lenght_activity + 2
+
 
 
 

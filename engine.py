@@ -25,5 +25,6 @@ class Engine():
         print(self.list_from_user_file)
         self.move.write_in_excel(data_value, self.list_from_user_file[1], self.list_from_user_file[3], self.error_response)
         self.app.app(data_value, self.list_from_user_file[1], self.list_inn_from_postgre, self.error_response)
+        self.pdf_files.delete_old_files(self.list_from_user_file[2])
         print(self.error_response)
 

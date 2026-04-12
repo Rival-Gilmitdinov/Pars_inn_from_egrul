@@ -45,7 +45,7 @@ class Append_table_postrge():
             for value in data_value:
                 if str(value['инн']) in list_inn_from_postgre:
                     continue
-                data = Inn(inn_company=f'{int(value["инн"])}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
+                data = Inn(inn_company=f'{(value["инн"])}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
                            activity=f'{value["Сведения об основном виде деятельности"]}')
                 # n += 1
                 session.add(data)

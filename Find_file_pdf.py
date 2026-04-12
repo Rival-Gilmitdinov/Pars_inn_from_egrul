@@ -20,8 +20,9 @@ class Find_pdf_file():
         session = requests.Session()
         # Проходим циклом по списку из значений инн
         for value in table:
+            print(value)
             try:
-                if str(value) in list_inn_from_postgre:
+                if value in list_inn_from_postgre:
                     continue
             except:
                 pass
@@ -71,17 +72,11 @@ class Find_pdf_file():
             file_pdf.write(file.content)
 
 
-    def delete_old_files(self) -> None:
+    def delete_old_files(self, path_dir) -> None:
         """Метод по удалению файлов из папки"""
-        way_dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
-        for file in os.listdir(way_dir):
-            file_path = os.path.join(way_dir, file)
-            os.remove(file_path)
+        for file in os.listdir(path_dir):
+            if 'pdf' in file:
+                file_path = os.path.join(path_dir, file)
+                os.remove(file_path)
 
 
-# def error_response(value=None):
-#     error_response_message = {}
-#     error_response_message.setdefault(value, 'Не удается получить ответ от сервиса')
-#     if value == 'Очистить словарь':
-#         error_response_message.clear()
-#     return error_response_message
