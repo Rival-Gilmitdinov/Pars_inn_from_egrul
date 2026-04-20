@@ -1,5 +1,5 @@
 import psycopg2
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, func
 from config import user, password, host, db, port
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, Session
 from datetime import date, timedelta
@@ -67,16 +67,19 @@ class Append_table_postrge():
 
 
 class Check_data():
-    def check_data_from_postgre(self) -> list:
+    def check_data_from_postgre(self, list_from_user_file) -> tuple:
         """Метод по проверке данных в базе данных на давность, в итоговый список добавляется только не старые данные"""
         list_inn_from_postgre = []
+        list_data_from_postgre = []
         target_date = date.today() - timedelta(days=10)
         with Session(engine) as session:
-            results = session.query(Inn).filter(Inn.time_created >= target_date).all()
+            results = session.query(Inn).filter(Inn.inn_company == func.any(list_from_user_file))
+            print(f' результат составляет {results}')
             for value in results:
                 # if value.inn_company.isdigit() and len(value.inn_company) == 10:
                 list_inn_from_postgre.append(value.inn_company)
-        return list_inn_from_postgre
+                list_data_from_postgre.append(value)
+        return list_data_from_postgre, list_inn_from_postgre
 
 
     def pars_from_postgre(self, value):

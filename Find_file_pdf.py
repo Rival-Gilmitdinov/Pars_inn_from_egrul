@@ -17,12 +17,13 @@ class Find_pdf_file():
         Arguments:
             table - list
                 Список с инн, по которым пользователь хочет получить данные"""
+        print(f'в постгрессе есть данные по инн, в результате запроса список составляет: {list_inn_from_postgre}')
         session = requests.Session()
         # Проходим циклом по списку из значений инн
         for value in table:
             print(value)
             try:
-                if value in list_inn_from_postgre:
+                if value in set(list_inn_from_postgre):
                     continue
             except:
                 pass
@@ -48,7 +49,7 @@ class Find_pdf_file():
             count = 0
             while count < 5:
                 file = session.get(url=f'https://egrul.nalog.ru/vyp-status/{first_query_token}', timeout=20)
-                time.sleep(3)
+                time.sleep(0.5)
                 if file.json()['status'] == 'ready':
                     print(file.json()['status'])
                     break

@@ -14,14 +14,14 @@ class Engine():
         self.pars = Parser_pdf()
         self.app = Append_table_postrge()
         # self.all_results_from_database = cheсk.chek_data_from_postgre()[0]
-        self.list_inn_from_postgre = cheсk.check_data_from_postgre()
+        self.list_inn_from_postgre = cheсk.check_data_from_postgre(self.list_from_user_file[0])
         self.error_response = self.pdf_files.error_response
 
 
     def engine(self):
         """Метод по запуску приложения"""
-        self.pdf_files.query(self.list_from_user_file[0], self.list_from_user_file[2], self.list_inn_from_postgre)
-        data_value = self.pars.find_value(self.list_from_user_file[0], self.list_from_user_file[2], self.list_inn_from_postgre)
+        self.pdf_files.query(self.list_from_user_file[0], self.list_from_user_file[2], self.list_inn_from_postgre[1])
+        data_value = self.pars.find_value(self.list_from_user_file[0], self.list_from_user_file[2], self.list_inn_from_postgre[1])
         print(self.list_from_user_file)
         self.move.write_in_excel(data_value, self.list_from_user_file[1], self.list_from_user_file[3], self.error_response)
         self.app.app(data_value, self.list_from_user_file[1], self.list_inn_from_postgre, self.error_response)

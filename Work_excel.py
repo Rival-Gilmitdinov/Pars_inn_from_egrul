@@ -5,6 +5,7 @@ import os
 
 
 class Work_excel():
+
     def read_excel(self, file) -> tuple:
         '''Функия по парсингу таблицы excel
         file : файл, который загружает пользователь
@@ -25,11 +26,11 @@ class Work_excel():
                     if len(str(row[value])) == 10 or len(str(row[value])) == 12:
                         list_data_inn.append(str(row[value]))
                     else:
-                        error_data.setdefault(row[value], 'Неверное количество цифр инн')
+                        error_data[row[value]] = 'Неверное количество цифр инн'
                 elif row[value] == None:
                     continue
                 else:
-                    error_data.setdefault(row[value], 'Неверный тип данных')
+                    error_data[row[value]]  = 'Неверный тип данных'
         name_split = file.filename.rsplit('.')[0]
         path_dir = f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}'
         if name_split not in os.listdir('C:\Python\pythonProject\\2025\work_inn\saving_pdf'):
@@ -88,16 +89,17 @@ class Write_data():
         max_lenght_capital = 0
         max_lenght_activity = 0
         for value in data_value:
-            if len(value['инн']) >= max_lenght_inn:
-                max_lenght_inn = len(value['инн'])
-            if len(value['Полное наименование на русском языке']) >= max_lenght_name:
-                max_lenght_name = len(value['Полное наименование на русском языке'])
-            if len(value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']) >= max_lenght_capital:
-                max_lenght_capital = len(value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'])
-            if len(value['Сведения об основном виде деятельности']) >= max_lenght_activity:
-                max_lenght_activity = len(value['Сведения об основном виде деятельности'])
+            if len(str(value['инн'])) >= max_lenght_inn:
+                max_lenght_inn = len(str(value['инн']))
+            if len(str(value['Полное наименование на русском языке'])) >= max_lenght_name:
+                max_lenght_name = len(str(value['Полное наименование на русском языке']))
+                print(value['Полное наименование на русском языке'], len(value['Полное наименование на русском языке']))
+            if len(str(value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'])) >= max_lenght_capital:
+                max_lenght_capital = len(str(value['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']))
+            if len(str(value['Сведения об основном виде деятельности'])) >= max_lenght_activity:
+                max_lenght_activity = len(str(value['Сведения об основном виде деятельности']))
         self.sheet.column_dimensions['A'].width = max_lenght_inn + 2
-        self.sheet.column_dimensions['B'].width = max_lenght_name + 2
+        self.sheet.column_dimensions['B'].width = max_lenght_name + 6
         self.sheet.column_dimensions['C'].width = max_lenght_capital + 2
         self.sheet.column_dimensions['D'].width = max_lenght_activity + 2
 

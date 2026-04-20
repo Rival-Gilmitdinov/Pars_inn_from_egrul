@@ -35,8 +35,8 @@ class Parser_pdf():
         # Пробегаемся циклом по инн, которые были спарсены из экселя, который загрузил пользователь
         for value_inn_from_excel in list_from_excel:
             # Проверка, если такой инн в базе данных
-            if value_inn_from_excel in list_inn_from_postgre:
-                for value_postgre in self.check.pars_from_postgre(int(value_inn_from_excel)):
+            if value_inn_from_excel in set(list_inn_from_postgre[1]):
+                for value_postgre in list_inn_from_postgre[0]:
                     parsing_data['инн'] = value_postgre.inn_company
                     parsing_data['Полное наименование на русском языке'] = value_postgre.name
                     parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
@@ -47,7 +47,7 @@ class Parser_pdf():
                 for file_in_dir in list_file:
                     if value_inn_from_excel in file_in_dir:
                         list_file.remove(file_in_dir)
-        if list(parsing_data.values()).count(None) >= 1:
+        if list(parsing_data.values()).count(None) < 4:
             for keys in parsing_data.keys():
                 parsing_data[keys] = None
         print(f'после проверки на наличие данных в постгрессе у нас выходит такой списко файлов {list_file}')
@@ -70,16 +70,16 @@ class Parser_pdf():
                     # пробегаемся по строкам в поисках необходимых значений
                     try:
                         for value in tables:
-                            if 'ИНН юридического лица' in value:
+                            if 'ИНН юридического лица' in set(value):
                                 parsing_data['инн'] = value[2]
                                 print(f'тип данных ----- {type(value[2])}')
-                            if 'Полное наименование на русском языке' in value:
+                            elif 'Полное наименование на русском языке' in set(value):
                                 new_value = self.change_value(value[2])
                                 parsing_data['Полное наименование на русском языке'] = new_value
-                            elif 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде' in value:
+                            elif 'Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде' in set(value):
                                 new_value = self.change_value(tables[tables.index(value) + 2][2])
                                 parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде']  = new_value
-                            elif 'Сведения об основном виде деятельности' in value:
+                            elif 'Сведения об основном виде деятельности' in set(value):
                                 new_value = self.change_value(tables[tables.index(value) + 2][2])
                                 parsing_data['Сведения об основном виде деятельности'] = new_value
                             if None not in parsing_data.values():
@@ -92,7 +92,7 @@ class Parser_pdf():
                                 break
                     except:
                         list_data.append('Данные в ЕГРЮЛ не найдены')
-                    if 1 <= list(parsing_data.values()).count(None) < 5:
+                    if 1 <= list(parsing_data.values()).count(None) < 4:
                         if i == count_pages - 1:
                             safe_data = parsing_data
                             list_data.append(safe_data.copy())
