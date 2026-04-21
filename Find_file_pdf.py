@@ -45,7 +45,11 @@ class Find_pdf_file():
             token = get_value.json()['rows'][0]['t']
             # Создаем запрсо для обозначения статуса в будущем готовности документа к скачиванию
             first_query = session.get(url=f'https://egrul.nalog.ru/vyp-request/{token}')
-            first_query_token = first_query.json()['t']
+            print(first_query.json())
+            if 't' in first_query.json().keys():
+                first_query_token = first_query.json()['t']
+            else:
+                print(f'опять возникла ошибка с отсутствием ключа t, текст ошибки {first_query.json().text}')
             count = 0
             while count < 5:
                 file = session.get(url=f'https://egrul.nalog.ru/vyp-status/{first_query_token}', timeout=20)

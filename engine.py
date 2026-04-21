@@ -3,6 +3,7 @@ from Find_file_pdf import Find_pdf_file
 from Parser_pdf import Parser_pdf
 from Work_postgre import Append_table_postrge, cheсk
 from Work_excel import Write_data
+import time
 
 
 class Engine():
@@ -20,11 +21,15 @@ class Engine():
 
     def engine(self):
         """Метод по запуску приложения"""
+        time_1 = time.time()
         self.pdf_files.query(self.list_from_user_file[0], self.list_from_user_file[2], self.list_inn_from_postgre[1])
-        data_value = self.pars.find_value(self.list_from_user_file[0], self.list_from_user_file[2], self.list_inn_from_postgre[1])
+        data_value = self.pars.find_value(self.list_from_user_file[0], self.list_from_user_file[2], self.list_inn_from_postgre)
         print(self.list_from_user_file)
         self.move.write_in_excel(data_value, self.list_from_user_file[1], self.list_from_user_file[3], self.error_response)
         self.app.app(data_value, self.list_from_user_file[1], self.list_inn_from_postgre, self.error_response)
         self.pdf_files.delete_old_files(self.list_from_user_file[2])
         print(self.error_response)
+        time_2 = time.time()
+        print(f'время выполения программы составляет {time_2 - time_1}')
+
 
