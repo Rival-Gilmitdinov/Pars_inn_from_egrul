@@ -20,7 +20,7 @@ class Parser_pdf():
         return list_file
 
 
-    def find_value(self, list_from_excel, path_dir, list_inn_from_postgre) -> list:
+    def find_value(self, list_from_excel,path_dir, list_inn_from_postgre) -> list:
         """Метод по парсингу пдф файла, сбор этих данных в каждый словарь и добавление этих словарей в один список
         Parameters:
             list_from_excel: list
@@ -36,17 +36,17 @@ class Parser_pdf():
         for value_inn_from_excel in list_from_excel:
             # Проверка, если такой инн в базе данных
             if value_inn_from_excel in set(list_inn_from_postgre[1]):
-                for value_postgre in list_inn_from_postgre[0]:
-                    parsing_data['инн'] = value_postgre.inn_company
-                    parsing_data['Полное наименование на русском языке'] = value_postgre.name
-                    parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
-                    parsing_data['Сведения об основном виде деятельности'] = value_postgre.activity
-                copy_dict = parsing_data.copy()
-                list_data.append(copy_dict)
-                print(f'значение есть в посгре - {list_data}')
                 for file_in_dir in list_file:
                     if value_inn_from_excel in file_in_dir:
                         list_file.remove(file_in_dir)
+        for value_postgre in list_inn_from_postgre[0]:
+            parsing_data['инн'] = value_postgre.inn_company
+            parsing_data['Полное наименование на русском языке'] = value_postgre.name
+            parsing_data['Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде'] = value_postgre.capital
+            parsing_data['Сведения об основном виде деятельности'] = value_postgre.activity
+            copy_dict = parsing_data.copy()
+            list_data.append(copy_dict)
+        print(f'значение есть в посгре - {list_data}')
         if list(parsing_data.values()).count(None) < 4:
             for keys in parsing_data.keys():
                 parsing_data[keys] = None

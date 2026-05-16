@@ -3,9 +3,6 @@ import time
 import os
 from qwe import headers
 
-
-
-
 class Find_pdf_file():
     def __init__(self):
         self.error_response = {}
@@ -49,7 +46,7 @@ class Find_pdf_file():
             if 't' in first_query.json().keys():
                 first_query_token = first_query.json()['t']
             else:
-                print(f'опять возникла ошибка с отсутствием ключа t, текст ошибки {first_query.json().text}')
+                print(f'опять возникла ошибка с отсутствием ключа t, текст ошибки {first_query.json()}')
             count = 0
             while count < 5:
                 file = session.get(url=f'https://egrul.nalog.ru/vyp-status/{first_query_token}', timeout=20)
@@ -64,7 +61,6 @@ class Find_pdf_file():
                 # Отправляем запрос для получения файла
                 file_pdf = session.get(url=f'https://egrul.nalog.ru/vyp-download/{token}', headers=headers)
             self.save_document(file_pdf, value, path_dir)
-
 
 
     def save_document(self, file, inn, path_dir) -> None:

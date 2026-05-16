@@ -79,6 +79,8 @@ class Check_data():
                 # if value.inn_company.isdigit() and len(value.inn_company) == 10:
                 list_inn_from_postgre.append(value.inn_company)
                 list_data_from_postgre.append(value)
+                print(f'инн в постгрессе:{list_inn_from_postgre}')
+                print(f'данные из постгресса {list_data_from_postgre}')
         return list_data_from_postgre, list_inn_from_postgre
 
 
@@ -91,6 +93,6 @@ class Check_data():
             data_inn = session.query(Inn).filter(Inn.inn_company == str(value)).all()
         return data_inn
 
-
+#
 cheсk = Check_data()
 

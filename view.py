@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, flash, send_file, session
 import os
+# from engine import Engine
 from werkzeug.utils import secure_filename
 
 
@@ -44,11 +45,11 @@ def start():
 def result():
     name_user_file = session['name_file']
     print(name_user_file)
-    list_files = os.listdir(f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_user_file}')
+    list_files = os.listdir(f'saving_pdf\\{name_user_file}')
     for file in list_files:
         if 'xlsx' in file:
             print(file)
-            file_path = f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_user_file}\\result_data_{name_user_file}.xlsx'
+            file_path = f'saving_pdf\\{name_user_file}\\result_data_{name_user_file}.xlsx'
             filename = f'result_data_{name_user_file}.xlsx'
             return send_file(
                     file_path,

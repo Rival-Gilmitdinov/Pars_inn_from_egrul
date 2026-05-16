@@ -5,8 +5,24 @@ import os
 
 
 class Work_excel():
+    def __init__(self, file):
+        self.file = file
+        wb = load_workbook(self.file, read_only=True)
+        self.ws = wb.active
 
-    def read_excel(self, file) -> tuple:
+    def file_name(self):
+        name_split = self.file.filename.rsplit('.')[0]
+        return name_split
+
+    def path_dir(self):
+        path_dir = f'saving_pdf\\{self.file_name()}'
+        return path_dir
+
+    def make_dir(self):
+        if self.file_name() not in os.listdir('saving_pdf'):
+            os.mkdir(self.path_dir())
+
+    def read_excel(self) -> tuple:
         '''Функия по парсингу таблицы excel
         file : файл, который загружает пользователь
         Return: list_data_inn - list
@@ -15,27 +31,21 @@ class Work_excel():
             словарь с неверными значениями и текстом ошибки
         error_data - dict
             словарь с неверными значениями и текстом ошибки'''
-        wb = load_workbook(file, read_only=True)
-        ws = wb.active
         list_data_inn = []
         error_data = {}
         # Проходим циклом по значениям таблицы
-        for row in ws.iter_rows(values_only=True):
-            for value in range(len(row)):
-                if type(row[value]) == int or (type(row[value]) == str and row[value].isdigit()):
-                    if len(str(row[value])) == 10 or len(str(row[value])) == 12:
-                        list_data_inn.append(str(row[value]))
+        for row in self.ws.iter_rows(values_only=True):
+            for value in row:
+                if type(value) == int or (type(value) == str and value.isdigit()):
+                    if len(str(value)) == 10 or len(str(value)) == 12:
+                        list_data_inn.append(str(value))
                     else:
-                        error_data[row[value]] = 'Неверное количество цифр инн'
-                elif row[value] == None:
+                        error_data[value] = 'Неверное количество цифр инн'
+                elif value == None:
                     continue
                 else:
-                    error_data[row[value]]  = 'Неверный тип данных'
-        name_split = file.filename.rsplit('.')[0]
-        path_dir = f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}'
-        if name_split not in os.listdir('C:\Python\pythonProject\\2025\work_inn\saving_pdf'):
-            os.mkdir(path_dir)
-        return list_data_inn, error_data, path_dir, name_split
+                    error_data[value] = 'Неверный тип данных'
+        return list_data_inn, error_data
 
 
 class Write_data():
