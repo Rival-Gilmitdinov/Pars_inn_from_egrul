@@ -12,7 +12,6 @@ class Parser_pdf():
     def find_file(self, path_dir) -> list:
         """Метод по нахождению файла и создания списка с полным путем к ним"""
         list_file = []
-        # dir = 'C:\Python\pythonProject\\2025\work_inn\saving_pdf'
         for file in os.listdir(path_dir):
             if 'pdf' in file:
                 abs_path = os.path.join(path_dir, file)
@@ -55,10 +54,6 @@ class Parser_pdf():
             return list_data
         # пробегаемся циклом по файлам из папки
         for file in list_file:
-            # for name_of_file in file.split('\\'):
-            #     if 'result_search_file' in name_of_file:
-            #         inn = name_of_file.split('_')[0]
-            #         parsing_data['инн'] = inn
             Flag = False
             with pdfplumber.open(file) as file:
                 # узнаем количество страниц
@@ -116,16 +111,4 @@ class Parser_pdf():
             new_value = value
         return new_value
 
-    # def chek_files(self, file) -> bool:
-    #     """Метод по проверке наличия инн, необходимого для получения данных и того файла, над которым ведется работа"""
-    #     table = Work_excel()
-    #     sp = table.read_excel(self.doc)
-    #     flag = False
-    #     for i in sp[0]:
-    #         if str(i) in file:
-    #             flag = True
-    #     return flag
 
-# pars = Parser_pdf()
-# print(pars.find_value([3444051154, 6319054636], 'C:\Python\pythonProject\\2025\work_inn\saving_pdf\еще один пробный файл', []))
-#

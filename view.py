@@ -27,8 +27,6 @@ def start():
     if request.method == 'POST':
         doc = request.files['file']
         session['name_file'] = doc.filename.rsplit('.')[0]
-        print(doc.filename)
-        print(request.files)
         if 'file' not in request.files:
             flash('файл не выбран, выберите файл', 'error')
         elif validation_file(doc.filename) == False:
@@ -44,11 +42,9 @@ def start():
 @app.route('/result', methods=['GET', 'POST'])
 def result():
     name_user_file = session['name_file']
-    print(name_user_file)
     list_files = os.listdir(f'saving_pdf\\{name_user_file}')
     for file in list_files:
         if 'xlsx' in file:
-            print(file)
             file_path = f'saving_pdf\\{name_user_file}\\result_data_{name_user_file}.xlsx'
             filename = f'result_data_{name_user_file}.xlsx'
             return send_file(

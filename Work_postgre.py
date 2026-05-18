@@ -23,7 +23,7 @@ if not inspector.has_table('data_on_inn'):
 
 
 class Append_table_postrge():
-    def app(self, data_value, error_data, list_inn_from_postgre, error_response) -> None:
+    def app(self, data_value, error_data, list_inn_from_postgre, error_response, error_from_postgre) -> None:
         """Метод по удалению старых данных и записи новых данных в базу данных
         Parameters:
             spisok: list
@@ -41,9 +41,9 @@ class Append_table_postrge():
             session.commit()
             # n = 0
             print(data_value)
-            print(f' в постгрессе сейчас такие данные {list_inn_from_postgre}')
+            print(f' в постгрессе сейчас такие данные {list_inn_from_postgre[1]}')
             for value in data_value:
-                if str(value['инн']) in list_inn_from_postgre:
+                if str(value['инн']) in list_inn_from_postgre[1]:
                     continue
                 data = Inn(inn_company=f'{(value["инн"])}', name=f'{value["Полное наименование на русском языке"]}', capital=f'{value["Сведения об уставном капитале / складочном капитале / уставном фонде / паевом фонде"]}',
                            activity=f'{value["Сведения об основном виде деятельности"]}')
@@ -52,14 +52,16 @@ class Append_table_postrge():
             session.commit()
             if error_data:
                 for key_error, value_error, in error_data.items():
-                    if key_error in list_inn_from_postgre:
+                    print(f'Ошибочные данные из посгресса {error_from_postgre}')
+                    print(f'ошибочные данные для записи {key_error}')
+                    if key_error in error_from_postgre:
                         continue
                     data_error = Inn(inn_company=f'{key_error}', name=f'{value_error}')
                     session.add(data_error)
                     session.commit()
             if error_response:
                 for key_error_2, value_error_2, in error_response.items():
-                    if key_error_2 in list_inn_from_postgre:
+                    if key_error_2 in list_inn_from_postgre[1]:
                         continue
                     data_error_2 = Inn(inn_company=f'{key_error_2}', name=f'{value_error_2}')
                     session.add(data_error_2)
@@ -79,19 +81,20 @@ class Check_data():
                 # if value.inn_company.isdigit() and len(value.inn_company) == 10:
                 list_inn_from_postgre.append(value.inn_company)
                 list_data_from_postgre.append(value)
-                print(f'инн в постгрессе:{list_inn_from_postgre}')
-                print(f'данные из постгресса {list_data_from_postgre}')
         return list_data_from_postgre, list_inn_from_postgre
 
 
-    def pars_from_postgre(self, value):
+    def pars_erros_from_postgre(self):
         """Метод по выборке данных из базы данных, по итогу выходит объект постгресса
         Parameters:
             value: int
                 Значение инн, по которым пользователю нужна информацию"""
+        data_errors_inn = []
         with Session(engine) as session:
-            data_inn = session.query(Inn).filter(Inn.inn_company == str(value)).all()
-        return data_inn
+            data_errors = session.query(Inn.inn_company).filter(Inn.name == 'Неверный тип данных').all()
+        for i in data_errors:
+            data_errors_inn.append(*i)
+        return data_errors_inn
 
 #
 cheсk = Check_data()

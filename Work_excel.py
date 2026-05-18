@@ -90,7 +90,7 @@ class Write_data():
                 self.sheet[n][0].value = key
                 self.sheet[n][1].value = value
         self.width_column(data_value)
-        self.book.save(f'C:\Python\pythonProject\\2025\work_inn\saving_pdf\\{name_split}\\result_data_{name_split}.xlsx')
+        self.book.save(f'saving_pdf\\{name_split}\\result_data_{name_split}.xlsx')
         self.book.close()
 
     def width_column(self, data_value):

@@ -20,6 +20,7 @@ class Engine():
         # self.all_results_from_database = cheсk.chek_data_from_postgre()[0]
         self.list_inn_from_postgre = cheсk.check_data_from_postgre(self.list_from_user_file)
         self.error_response = self.pdf_files.error_response
+        self.errors_from_postgre = cheсk.pars_erros_from_postgre()
 
 
     def engine(self):
@@ -29,7 +30,7 @@ class Engine():
         data_value = self.pars.find_value(self.list_from_user_file, self.path_dir, self.list_inn_from_postgre)
         print(self.list_from_user_file)
         self.move.write_in_excel(data_value, self.error_data, self.name_split, self.error_response)
-        self.app.app(data_value, self.error_data, self.list_inn_from_postgre, self.error_response)
+        self.app.app(data_value, self.error_data, self.list_inn_from_postgre, self.error_response, self.errors_from_postgre)
         self.pdf_files.delete_old_files(self.path_dir)
         print(self.error_response)
         time_2 = time.time()
